@@ -13,6 +13,7 @@ module.exports = {
     --version:            выводит номер версии
     --help:               печатает этот текст
     --generate <count>    формирует файл mocks.json
+    --server 3000         запускает сервер
     `;
     console.log(chalk.gray(text));
   }
