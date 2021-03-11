@@ -68,7 +68,7 @@ module.exports = {
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
 
     if (countOffer > MAX_COUNT) {
-      console.info(chalk.red(`Не больше 1000 объявлений`));
+      console.info(chalk.red(`Limit exceeded. Maximum 1000`));
     } else {
       const content = JSON.stringify(generateOffers(countOffer, titles, categories, sentences));
 
