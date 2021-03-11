@@ -60,7 +60,7 @@ module.exports = {
         return console.error(chalk.red(`Server error`), err);
       }
 
-      return console.info(chalk.green(`Connections by ${port}`));
+      return console.info(chalk.green(`Connection by ${port}`));
     });
   }
 };
