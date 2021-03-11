@@ -51,7 +51,7 @@ const generateOffers = (count, titles, categories, sentences) => (
 const readContent = async (filePath) => {
   try {
     const content = await fs.readFile(filePath, `utf8`);
-    return content.split(`\n`);
+    return content.trim().split(`\n`);
   } catch (err) {
     console.error(chalk.red(err));
     return [];
@@ -68,7 +68,7 @@ module.exports = {
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
 
     if (countOffer > MAX_COUNT) {
-      console.info(chalk.red(`Не больше 1000 объявлений`));
+      console.info(chalk.red(`Limit exceeded. Maximum 1000`));
     } else {
       const content = JSON.stringify(generateOffers(countOffer, titles, categories, sentences));
 
