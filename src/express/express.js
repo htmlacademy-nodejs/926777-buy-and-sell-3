@@ -24,5 +24,6 @@ app.use((req, res) => res.status(500).render(`errors/500`));
 app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);
 
-console.info(chalk.green(`Connection by ${DEFAULT_PORT}`));
 app.listen(DEFAULT_PORT);
+
+console.info(chalk.green(`Connection by ${DEFAULT_PORT}`));
