@@ -2,7 +2,6 @@
 
 const chalk = require(`chalk`);
 const express = require(`express`);
-
 const {
   HttpCode,
   API_PREFIX
@@ -12,22 +11,23 @@ const routes = require(`../api`);
 
 const DEFAULT_PORT = 3000;
 
-const app = express();
+const startServer = async () => {
+  const app = express();
+  app.use(express.json());
+  app.use(API_PREFIX, await routes());
+  app.use((req, res) => res
+    .status(HttpCode.NOT_FOUND)
+    .send(`Not found`));
 
-app.use(express.json());
-app.use(API_PREFIX, routes);
-
-
-app.use((req, res) => res
-  .status(HttpCode.NOT_FOUND)
-  .send(`Not found`));
-
+  return app;
+};
 
 module.exports = {
   name: `--server`,
   async run(args) {
     const [customPort] = args;
     const port = Number.parseInt(customPort, 10) || DEFAULT_PORT;
+    const app = await startServer();
     try {
       app.listen(port, (err) => {
         if (err) {

@@ -22,7 +22,7 @@ module.exports = (app, offerService, commentService) => {
 
     if (!offer) {
       return res.status(HttpCode.NOT_FOUND)
-        .send(`Not found with ${offerId}`);
+        .json({error: `Not found with ${offerId}`});
     }
 
     return res.status(HttpCode.OK)
@@ -42,7 +42,7 @@ module.exports = (app, offerService, commentService) => {
 
     if (!existOffer) {
       return res.status(HttpCode.NOT_FOUND)
-        .send(`Not found with ${offerId}`);
+        .json({error: `Not found with ${offerId}`});
     }
 
     const updatedOffer = offerService.update(offerId, req.body);
@@ -57,7 +57,7 @@ module.exports = (app, offerService, commentService) => {
 
     if (!offer) {
       return res.status(HttpCode.NOT_FOUND)
-        .send(`Not found`);
+        .json({error: `Not found`});
     }
 
     return res.status(HttpCode.OK)
@@ -80,7 +80,7 @@ module.exports = (app, offerService, commentService) => {
 
     if (!deletedComment) {
       return res.status(HttpCode.NOT_FOUND)
-        .send(`Not found`);
+        .json({error: `Not found`});
     }
 
     return res.status(HttpCode.OK)
