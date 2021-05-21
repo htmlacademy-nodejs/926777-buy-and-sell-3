@@ -14,7 +14,7 @@ const {
   CommentService,
 } = require(`../data-service`);
 
-const createApp = async () => {
+const createRouter = async () => {
   const app = new Router();
   const mockData = await getMockData();
 
@@ -25,4 +25,4 @@ const createApp = async () => {
   return app;
 };
 
-module.exports = createApp;
+module.exports = createRouter;
