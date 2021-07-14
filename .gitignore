@@ -14,4 +14,8 @@ node_modules/
 # Папка с собранными файлами проекта
 build/
 
+# Директория с загруженными изображениями
+src/express/upload/img/*.*
+!src/express/upload/img/.gitkeep
+
 mocks.json
