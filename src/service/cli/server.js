@@ -12,7 +12,6 @@ const {getLogger} = require(`../lib/logger`);
 const DEFAULT_PORT = 3000;
 const logger = getLogger({name: `api`});
 
-
 const createApp = async () => {
   const app = express();
   app.use(express.json());
@@ -37,8 +36,6 @@ const createApp = async () => {
 
   return app;
 };
-
-
 
 module.exports = {
   name: `--server`,
