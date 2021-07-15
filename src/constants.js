@@ -1,18 +1,18 @@
 'use strict';
 
-module.exports.DEFAULT_COMMAND = `--help`;
+const DEFAULT_COMMAND = `--help`;
 
 // 3ий аргумент process.argv[2]
-module.exports.USER_ARGV_INDEX = 2;
+const USER_ARGV_INDEX = 2;
 
-module.exports.ExitCode = {
+const ExitCode = {
   ERROR: 1,
   SUCCESS: 0,
 };
 
-module.exports.MAX_COUNT = 1000;
+const MAX_COUNT = 1000;
 
-module.exports.HttpCode = {
+const HttpCode = {
   OK: 200,
   CREATED: 201,
   BAD_REQUEST: 400,
@@ -22,13 +22,24 @@ module.exports.HttpCode = {
   UNAUTHORIZED: 401,
 };
 
-module.exports.MAX_ID_LENGTH = 6;
+const MAX_ID_LENGTH = 6;
 
-module.exports.API_PREFIX = `/api`;
+const API_PREFIX = `/api`;
 
-module.exports.Env = {
+const Env = {
   DEVELOPMENT: `development`,
   PRODUCTION: `production`
+};
+
+module.exports = {
+  DEFAULT_COMMAND,
+  USER_ARGV_INDEX,
+  ExitCode,
+  MAX_COUNT,
+  HttpCode,
+  MAX_ID_LENGTH,
+  API_PREFIX,
+  Env
 };
 
 
