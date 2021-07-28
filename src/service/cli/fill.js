@@ -72,7 +72,7 @@ module.exports = {
   name: `--fill`,
   async run(args) {
     const sentences = await readContent(FILE_SENTENCES_PATH);
-    const titles = await (FILE_TITLES_PATH);
+    const titles = await readContent(FILE_TITLES_PATH);
     const categories = await readContent(FILE_CATEGORIES_PATH);
     const [count] = args;
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
@@ -140,6 +140,7 @@ module.exports = {
       console.info(chalk.green(`Operation success. File created.`));
     } catch (err) {
       console.error(chalk.red(`Can't write data to file...`));
+      process.exit(1);
     }
   }
 };
