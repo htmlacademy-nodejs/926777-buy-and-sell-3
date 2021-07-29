@@ -8,6 +8,10 @@ const {
   shuffle,
 } = require(`../../utils`);
 
+const {
+  ExitCode
+} = require(`../...constants`);
+
 // данные по умолчанию
 const DEFAULT_COUNT = 1;
 const MAX_COMMENTS = 4;
@@ -140,7 +144,7 @@ module.exports = {
       console.info(chalk.green(`Operation success. File created.`));
     } catch (err) {
       console.error(chalk.red(`Can't write data to file...`));
-      process.exit(1);
+      process.exit(ExitCode.ERROR);
     }
   }
 };

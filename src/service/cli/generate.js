@@ -11,7 +11,8 @@ const {
 
 const {
   MAX_COUNT,
-  MAX_ID_LENGTH
+  MAX_ID_LENGTH,
+  ExitCode
 } = require(`../../constants`);
 
 // данные по умолчанию
@@ -93,7 +94,7 @@ module.exports = {
         console.info(chalk.green(`Operation success. File created.`));
       } catch (err) {
         console.error(chalk.red(`Can't write data to file...`));
-        process.exit(1);
+        process.exit(ExitCode.ERROR);
       }
     }
   }

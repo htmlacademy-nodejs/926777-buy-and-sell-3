@@ -3,7 +3,8 @@
 const express = require(`express`);
 const {
   HttpCode,
-  API_PREFIX
+  API_PREFIX,
+  ExitCode
 } = require(`../../constants`);
 
 const createApiRouter = require(`../api`);
@@ -49,7 +50,7 @@ module.exports = {
           })
           .on(`error`, (err) => {
             logger.error(`An error occurred: ${err.message}`);
-            process.exit(1);
+            process.exit(ExitCode.ERROR);
           });
   }
 };
