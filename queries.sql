@@ -15,7 +15,7 @@ SELECT id, name, count(offer_id) FROM categories
 
 -- Получить список объявлений (идентификатор объявления, заголовок объявления, стоимость, тип объявления, текст объявления, дата публикации, имя и фамилия автора, контактный email, количество комментариев, наименование категорий). Сначала свежие объявления;
 SELECT offers.*, 
-  COUNT(comments.id) AS comments_count, 
+  COUNT(DISTINCT comments.id) AS comments_count, 
   STRING_AGG(DISTINCT categories.name, ', ') AS category_list,
   users.first_name,
   users.last_name,
