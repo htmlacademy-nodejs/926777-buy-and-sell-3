@@ -8,8 +8,8 @@
     "jest": "jest",
     "eslint": "eslint --ext .js src/",
     "start:dev": "nodemon ./src/service/service.js",
-    "start": "cross-env LOG_LEVEL=error node ./src/service/service.js",
-    "start::debug": "cross-env LOG_LEVEL=info NODE_ENV=development node ./src/service/service.js",
+    "start": "cross-env LOG_LEVEL=error node -r dotenv/config ./src/service/service.js",
+    "start::debug": "cross-env LOG_LEVEL=info NODE_ENV=development node -r dotenv/config ./src/service/service.js",
     "server": "nodemon ./src/service/service.js --server 3000",
     "start-front-server": "node ./src/express/express.js"
   },
@@ -35,10 +35,13 @@
     "axios": "0.21.1",
     "chalk": "4.1.0",
     "cross-env": "^7.0.3",
+    "dotenv": "10.0.0",
     "express": "4.17.1",
     "multer": "1.4.2",
     "nanoid": "3.1.22",
+    "pg": "8.7.1",
     "pino": "6.11.3",
-    "pug": "2.0.4"
+    "pug": "2.0.4",
+    "sequelize": "6.6.5"
   }
 }

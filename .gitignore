@@ -19,3 +19,6 @@ src/express/upload/img/*.*
 !src/express/upload/img/.gitkeep
 
 mocks.json
+
+# Файл с переменными окружения
+.env

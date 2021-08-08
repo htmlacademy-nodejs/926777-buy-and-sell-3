@@ -10,7 +10,7 @@ const {
 
 const {
   ExitCode
-} = require(`../...constants`);
+} = require(`../../constants`);
 
 // данные по умолчанию
 const DEFAULT_COUNT = 1;
