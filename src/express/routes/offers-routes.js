@@ -6,8 +6,6 @@ const path = require(`path`);
 const {nanoid} = require(`nanoid`);
 const api = require(`../api`).getAPI();
 
-const {ensureArray} = require(`../../utils`);
-
 const UPLOAD_DIR = `../upload/img/`;
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
 const offersRouter = new Router();
@@ -23,7 +21,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
-offersRouter.get(`/category/:id`, (req, res) => res.render(`category`));
+offersRouter.get(`/category/:id`, async (req, res) => {
+  const categories = await api.getCategories();
+  res.render(`category`, {categories});
+});
 
 offersRouter.get(`/add`, async (req, res) => {
   const categories = await api.getCategories();
@@ -40,7 +41,7 @@ offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
     type: body.action,
     description: body.comment,
     title: body[`ticket-name`],
-    category: ensureArray(body.category),
+    categories: body.category,
   };
   try {
     await api.createOffer(offerData);
@@ -53,12 +54,16 @@ offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
 offersRouter.get(`/edit/:id`, async (req, res) => {
   const {id} = req.params;
   const [offer, categories] = await Promise.all([
-    api.getOffer(id),
+    api.getOffer(id, {comments: true}),
     api.getCategories()
   ]);
   res.render(`ticket-edit`, {offer, categories});
 });
 
-offersRouter.get(`/:id`, (req, res) => res.render(`ticket`));
+offersRouter.get(`/:id`, async (req, res) => {
+  const {id} = req.params;
+  const offer = await api.getOffer(id, {comments: true});
+  res.render(`ticket`, {offer});
+});
 
 module.exports = offersRouter;

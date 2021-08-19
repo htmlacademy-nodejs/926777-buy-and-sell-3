@@ -5,8 +5,15 @@ const mainRouter = new Router();
 const api = require(`../api`).getAPI();
 
 mainRouter.get(`/`, async (req, res) => {
-  const offers = await api.getOffers();
-  res.render(`main`, {offers});
+  const [
+    offers,
+    categories
+  ] = await Promise.all([
+    api.getOffers({comments: true}),
+    api.getCategories(true) // опциональный аргумент
+  ]);
+
+  res.render(`main`, {offers, categories});
 });
 
 mainRouter.get(`/register`, (req, res) => res.render(`sign-up`));

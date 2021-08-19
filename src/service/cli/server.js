@@ -45,15 +45,22 @@ module.exports = {
     const [customPort] = args;
     const port = Number.parseInt(customPort, 10) || DEFAULT_PORT;
     const app = await createApp();
-    app.listen(port);
+
+    logger.info(`Trying to connect to database...`);
     try {
-      logger.info(`Listening to connections on ${port}`);
-      logger.info(`Trying to connect to database...`);
       await sequelize.authenticate();
     } catch (err) {
       logger.error(`An error occurred: ${err.message}`);
       process.exit(ExitCode.ERROR);
     }
+    app.listen(port)
+    .on(`listening`, () => {
+      logger.info(`Listening to connections on ${port}`);
+    })
+    .on(`error`, (err) => {
+      logger.error(`An error occurred: ${err.message}`);
+      process.exit(ExitCode.ERROR);
+    });
     logger.info(`Connection to database established`);
   }
 };

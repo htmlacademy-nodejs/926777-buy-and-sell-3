@@ -18,10 +18,10 @@ block content
                   span.ticket-card__label #{result.type === `OFFER` ? `Куплю` : `Продам`}
                   .ticket-card__categories
                   each category in result.category
-                    a(href='#') #{category}
+                    a(href='#') #{category.name}
                   .ticket-card__header
                     h3.ticket-card__title
-                      a(href='#') #{result.title}
+                      a(href=`offers/${offer.id}`) #{result.title}
                     p.ticket-card__price
                       span.js-sum #{result.sum}
                       |  ₽

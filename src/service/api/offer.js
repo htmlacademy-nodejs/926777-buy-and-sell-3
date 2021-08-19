@@ -11,14 +11,16 @@ const route = new Router();
 module.exports = (app, offerService, commentService) => {
   app.use(`/offers`, route);
 
-  route.get(`/`, (req, res) => {
-    const offers = offerService.findAll();
+  route.get(`/`, async (req, res) => {
+    const {comments} = req.query;
+    const offers = await offerService.findAll(comments);
     res.status(HttpCode.OK).json(offers);
   });
 
-  route.get(`/:offerId`, (req, res) => {
+  route.get(`/:offerId`, async (req, res) => {
     const {offerId} = req.params;
-    const offer = offerService.findOne(offerId);
+    const {comments} = req.query;
+    const offer = await offerService.findOne(offerId, comments);
 
     if (!offer) {
       return res.status(HttpCode.NOT_FOUND)
@@ -29,14 +31,14 @@ module.exports = (app, offerService, commentService) => {
       .json(offer);
   });
 
-  route.post(`/`, offerValidator, (req, res) => {
-    const offer = offerService.create(req.body);
+  route.post(`/`, offerValidator, async (req, res) => {
+    const offer = await offerService.create(req.body);
 
     return res.status(HttpCode.CREATED)
       .json(offer);
   });
 
-  route.put(`/:offerId`, offerValidator, (req, res) => {
+  route.put(`/:offerId`, offerValidator, async (req, res) => {
     const {offerId} = req.params;
     const existOffer = offerService.findOne(offerId);
 
@@ -45,15 +47,15 @@ module.exports = (app, offerService, commentService) => {
         .json({error: `Not found with ${offerId}`});
     }
 
-    const updatedOffer = offerService.update(offerId, req.body);
+    const updatedOffer = await offerService.update(offerId, req.body);
 
     return res.status(HttpCode.OK)
       .json(updatedOffer);
   });
 
-  route.delete(`/:offerId`, (req, res) => {
+  route.delete(`/:offerId`, async (req, res) => {
     const {offerId} = req.params;
-    const offer = offerService.drop(offerId);
+    const offer = await offerService.drop(offerId);
 
     if (!offer) {
       return res.status(HttpCode.NOT_FOUND)
@@ -64,19 +66,19 @@ module.exports = (app, offerService, commentService) => {
       .json(offer);
   });
 
-  route.get(`/:offerId/comments`, offerExist(offerService), (req, res) => {
+  route.get(`/:offerId/comments`, offerExist(offerService), async (req, res) => {
     const {offer} = res.locals;
-    const comments = commentService.findAll(offer);
+    const comments = await commentService.findAll(offer);
 
     res.status(HttpCode.OK)
       .json(comments);
 
   });
 
-  route.delete(`/:offerId/comments/:commentId`, offerExist(offerService), (req, res) => {
+  route.delete(`/:offerId/comments/:commentId`, offerExist(offerService), async (req, res) => {
     const {offer} = res.locals;
     const {commentId} = req.params;
-    const deletedComment = commentService.drop(offer, commentId);
+    const deletedComment = await commentService.drop(offer, commentId);
 
     if (!deletedComment) {
       return res.status(HttpCode.NOT_FOUND)
@@ -87,9 +89,9 @@ module.exports = (app, offerService, commentService) => {
       .json(deletedComment);
   });
 
-  route.post(`/:offerId/comments`, [offerExist(offerService), commentValidator], (req, res) => {
+  route.post(`/:offerId/comments`, [offerExist(offerService), commentValidator], async (req, res) => {
     const {offer} = res.locals;
-    const comment = commentService.create(offer, req.body);
+    const comment = await commentService.create(offer, req.body);
 
     return res.status(HttpCode.CREATED)
       .json(comment);
