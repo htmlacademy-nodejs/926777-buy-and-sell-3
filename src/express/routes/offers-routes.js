@@ -5,6 +5,7 @@ const multer = require(`multer`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
 const api = require(`../api`).getAPI();
+const {asyncMiddleware} = require(`../../utils`);
 
 const UPLOAD_DIR = `../upload/img/`;
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
@@ -21,17 +22,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
-offersRouter.get(`/category/:id`, async (req, res) => {
+offersRouter.get(`/category/:id`, asyncMiddleware(async (req, res) => {
   const categories = await api.getCategories();
   res.render(`category`, {categories});
-});
+}));
 
-offersRouter.get(`/add`, async (req, res) => {
+offersRouter.get(`/add`, asyncMiddleware(async (req, res) => {
   const categories = await api.getCategories();
   res.render(`new-ticket`, {categories});
-});
+}));
 
-offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
+offersRouter.post(`/add`, upload.single(`avatar`), asyncMiddleware(async (req, res) => {
   // в `body` содержатся текстовые данные формы
   // в `file` — данные о сохранённом файле
   const {body, file} = req;
@@ -49,7 +50,7 @@ offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
   } catch (error) {
     res.redirect(`back`);
   }
-});
+}));
 
 offersRouter.get(`/edit/:id`, async (req, res) => {
   const {id} = req.params;

@@ -6,9 +6,8 @@ const offerValidator = require(`../middlewares/offer-validator`);
 const offerExist = require(`../middlewares/offer-exists`);
 const commentValidator = require(`../middlewares/comment-validator`);
 
-const route = new Router();
-
 module.exports = (app, offerService, commentService) => {
+  const route = new Router();
   app.use(`/offers`, route);
 
   route.get(`/`, async (req, res) => {
@@ -40,7 +39,7 @@ module.exports = (app, offerService, commentService) => {
 
   route.put(`/:offerId`, offerValidator, async (req, res) => {
     const {offerId} = req.params;
-    const existOffer = offerService.findOne(offerId);
+    const existOffer = await offerService.findOne(offerId);
 
     if (!existOffer) {
       return res.status(HttpCode.NOT_FOUND)
@@ -67,8 +66,9 @@ module.exports = (app, offerService, commentService) => {
   });
 
   route.get(`/:offerId/comments`, offerExist(offerService), async (req, res) => {
-    const {offer} = res.locals;
-    const comments = await commentService.findAll(offer);
+    // const {offer} = res.locals;
+    const {offerId} = req.params;
+    const comments = await commentService.findAll(offerId);
 
     res.status(HttpCode.OK)
       .json(comments);
@@ -90,9 +90,9 @@ module.exports = (app, offerService, commentService) => {
   });
 
   route.post(`/:offerId/comments`, [offerExist(offerService), commentValidator], async (req, res) => {
-    const {offer} = res.locals;
-    const comment = await commentService.create(offer, req.body);
-
+    // const {offer} = res.locals;
+    const {offerId} = req.params;
+    const comment = await commentService.create(offerId, req.body);
     return res.status(HttpCode.CREATED)
       .json(comment);
   });

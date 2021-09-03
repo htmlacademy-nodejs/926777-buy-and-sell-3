@@ -11,6 +11,10 @@ const createApiRouter = require(`../api`);
 const {getLogger} = require(`../lib/logger`);
 const sequelize = require(`../lib/sequelize`);
 
+const {DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} = process.env;
+
+const somethingIsNotDefined = [DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT].some((it) => it === undefined);
+
 const DEFAULT_PORT = 3000;
 const logger = getLogger({name: `api`});
 
@@ -45,7 +49,9 @@ module.exports = {
     const [customPort] = args;
     const port = Number.parseInt(customPort, 10) || DEFAULT_PORT;
     const app = await createApp();
-
+    if (somethingIsNotDefined) {
+      throw new Error(`One or more environmental variables are not defined`);
+    }
     logger.info(`Trying to connect to database...`);
     try {
       await sequelize.authenticate();

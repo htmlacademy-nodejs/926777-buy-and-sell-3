@@ -1,10 +1,12 @@
 'use strict';
 
 const {Router} = require(`express`);
-const mainRouter = new Router();
+const {asyncMiddleware} = require(`../../utils`);
 const api = require(`../api`).getAPI();
 
-mainRouter.get(`/`, async (req, res) => {
+const mainRouter = new Router();
+
+mainRouter.get(`/`, asyncMiddleware(async (req, res) => {
   const [
     offers,
     categories
@@ -14,13 +16,13 @@ mainRouter.get(`/`, async (req, res) => {
   ]);
 
   res.render(`main`, {offers, categories});
-});
+}));
 
 mainRouter.get(`/register`, (req, res) => res.render(`sign-up`));
 
 mainRouter.get(`/login`, (req, res) => res.render(`login`));
 
-mainRouter.get(`/search`, async (req, res) => {
+mainRouter.get(`/search`, asyncMiddleware(async (req, res) => {
   try {
     const {search} = req.query;
     const results = await api.search(search);
@@ -32,6 +34,6 @@ mainRouter.get(`/search`, async (req, res) => {
       results: []
     });
   }
-});
+}));
 
 module.exports = mainRouter;

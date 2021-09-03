@@ -6,12 +6,12 @@ const defineComment = require(`./comment`);
 const defineOffer = require(`./offer`);
 const Aliase = require(`./aliase`);
 
-class OfferCategory extends Model {}
-
 const define = (sequelize) => {
   const Category = defineCategory(sequelize);
   const Comment = defineComment(sequelize);
   const Offer = defineOffer(sequelize);
+
+  class OfferCategory extends Model {}
 
   // у одного объявления может быть несколько комментариев
   Offer.hasMany(Comment, {as: Aliase.COMMENTS, foreignKey: `offerId`});

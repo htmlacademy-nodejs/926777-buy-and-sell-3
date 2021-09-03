@@ -174,22 +174,22 @@ describe(`API changes existent offer`, () => {
 });
 
 // негативные сценарии: попытку изменить несуществующее объявление и передачу невалидного объекта нового объявления.
-// test(`API returns status code 404 when trying to change non-existent offer`, async () => {
-//   const app = await createAPI();
-//   const validOffer = {
-//     id: 1,
-//     title: `Это валидный`,
-//     description: `объект`,
-//     picture: `объявления`,
-//     type: `однако`,
-//     sum: 404,
-//   };
+test(`API returns status code 404 when trying to change non-existent offer`, async () => {
+  const validOffer = {
+    title: `Это валидный`,
+    description: `объект`,
+    picture: `объявления`,
+    type: `однако`,
+    sum: 404,
+    category: [`Без рамки`]
+  };
+  const app = await createAPI();
 
-//   return request(app)
-//     .put(`/offers/20`)
-//     .send(validOffer)
-//     .expect(HttpCode.NOT_FOUND);
-// });
+  return request(app)
+    .put(`/offers/43423245`)
+    .send(validOffer)
+    .expect(HttpCode.NOT_FOUND);
+});
 
 test(`API returns status code 400 when trying to change an offer with invalid data`, async () => {
   const app = await createAPI();
@@ -240,83 +240,84 @@ describe(`API returns a list of comments to given offer`, () => {
   beforeAll(async () => {
     const app = await createAPI();
     response = await request(app)
-      .get(`/offers/1`);
+      .get(`/offers/1`)
+      .query({comments: true});
   });
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
-  test(`Status code 200`, () => console.log(response.body));
-  // test(`Returns list of 2 comments`, () => expect(response.body.length).toBe(2));
+  test(`Returns list of 2 comments`, () => expect(response.body.comments.length).toBe(2));
   test(`First comment's text is "Совсем немного... Оплата наличными или перевод на карту?`, () => expect(response.body.comments[0].text).toBe(`Совсем немного... Оплата наличными или перевод на карту?`));
 });
 
-// describe(`API creates a comment if data is valid`, () => {
-//   const newComment = {
-//     text: `Валидному комментарию достаточно этого поля`
-//   };
-//   let app;
-//   let response;
+describe(`API creates a comment if data is valid`, () => {
+  const newComment = {
+    text: `Валидному комментарию достаточно этого поля`
+  };
+  let response;
+  let app;
 
-//   beforeAll(async () => {
-//     app = await createAPI();
-//     response = await request(app)
-//       .post(`/offers/1/comments`)
-//       .send(newComment);
-//   });
+  beforeAll(async () => {
+    app = await createAPI();
+    response = await request(app)
+      .post(`/offers/1/comments`)
+      .send(newComment);
+  });
 
-//   test(`Status code 201`, () => expect(response.statusCode).toBe(HttpCode.CREATED));
-//   test(`Comments count is changed`, () => request(app)
-//     .get(`/offers/1/comments`)
-//     .expect((res) => expect(res.body.length).toBe(1))
-//   );
-// });
+  test(`Status code 201`, () => expect(response.statusCode).toBe(HttpCode.CREATED));
 
-// test(`API refuses to create a comment to non-existent offer and returns status code 404`, async () => {
-//   const app = await createAPI();
-//   return request(app)
-//     .post(`/offers/NOEXST/comments`)
-//     .send({
-//       text: `Неважно`
-//     })
-//     .expect(HttpCode.NOT_FOUND);
-// });
+  test(`Comments count is changed`, () => request(app)
+    .get(`/offers/1?comments=true`)
+    .expect((res) => expect(res.body.comments.length).toBe(3))
+  );
+});
 
-// test(`API refuses to create a comment when data is invalid, and returns status code 400`, () => {
-//   const app = createAPI();
+test(`API refuses to create a comment to non-existent offer and returns status code 404`, async () => {
+  const app = await createAPI();
+  return request(app)
+    .post(`/offers/NOEXST/comments`)
+    .send({
+      text: `Неважно`
+    })
+    .expect(HttpCode.NOT_FOUND);
+});
 
-//   return request(app)
-//     .post(`/offers/8YlHaa/comments`)
-//     .send({})
-//     .expect(HttpCode.BAD_REQUEST);
-// });
+test(`API refuses to create a comment when data is invalid, and returns status code 400`, async () => {
+  const app = await createAPI();
 
-// describe(`API correctly deletes a comment`, () => {
-//   const app = createAPI();
-//   let response;
+  return request(app)
+    .post(`/offers/1/comments`)
+    .send({})
+    .expect(HttpCode.BAD_REQUEST);
+});
 
-// beforeAll(async () => {
-//   response = await request(app)
-//     .delete(`/offers/8YlHaa/comments/TLoAah`);
-// });
+describe(`API correctly deletes a comment`, () => {
+  let app;
+  let response;
 
-// test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
-// test(`Returns comment deleted`, () => expect(response.body.id).toBe(`TLoAah`));
-// test(`Comments count is 3 now`, () => request(app)
-//   .get(`/offers/8YlHaa/comments`)
-//   .expect((res) => expect(res.body.length).toBe(1))
-// );
-// });
+  beforeAll(async () => {
+    app = await createAPI();
+    response = await request(app)
+      .delete(`/offers/1/comments/1`);
+  });
 
-// test(`API refuses to delete non-existent comment`, () => {
-//   const app = createAPI();
+  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
+  test(`Comments count is 3 now`, () => request(app)
+    .get(`/offers/1/comments`)
+    .expect((res) => expect(res.body.length).toBe(2))
+  );
+});
 
-//   return request(app)
-//     .delete(`/offers/8YlHaa/comments/NOEXST`)
-//     .expect(HttpCode.NOT_FOUND);
-// });
+test(`API refuses to delete non-existent comment`, async () => {
+  const app = await createAPI();
 
-// test(`API refuses to delete a comment to non-existent offer`, async () => {
-//   const app = await createAPI();
-//   return request(app)
-//     .delete(`/offers/20/comments/kqME9j`)
-//     .expect(HttpCode.NOT_FOUND);
-// });
+  return request(app)
+    .delete(`/offers/8YlHaa/comments/NOEXST`)
+    .expect(HttpCode.NOT_FOUND);
+});
+
+test(`API refuses to delete a comment to non-existent offer`, async () => {
+  const app = await createAPI();
+  return request(app)
+    .delete(`/offers/20/comments/1`)
+    .expect(HttpCode.NOT_FOUND);
+});
